@@ -2,9 +2,17 @@ package com.uxcasuals.waves;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.uxcasuals.waves.adapters.StationsAdapter;
+import com.uxcasuals.waves.models.Station;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,6 +23,17 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        RecyclerView stationsView = (RecyclerView)findViewById(R.id.stations_view);
+        RecyclerView.LayoutManager layout = new GridLayoutManager(this, 2);
+
+        List<Station> stations = new ArrayList<Station>();
+        stations.add(new Station("Radio City", "http://google.com", ""));
+        stations.add(new Station("Radio City", "http://google.com", ""));
+        StationsAdapter stationsAdapter = new StationsAdapter(stations);
+
+        stationsView.setLayoutManager(layout);
+        stationsView.setAdapter(stationsAdapter);
     }
 
     @Override
