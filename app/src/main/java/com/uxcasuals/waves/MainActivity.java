@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.uxcasuals.waves.adapters.StationsAdapter;
 import com.uxcasuals.waves.models.Station;
 
@@ -15,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private SlidingUpPanelLayout slidingUpPanelLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,10 +33,18 @@ public class MainActivity extends AppCompatActivity {
         List<Station> stations = new ArrayList<Station>();
         stations.add(new Station("Radio City", "http://google.com", ""));
         stations.add(new Station("Radio City", "http://google.com", ""));
+        stations.add(new Station("Radio City", "http://google.com", ""));
+        stations.add(new Station("Radio City", "http://google.com", ""));
+        stations.add(new Station("Radio City", "http://google.com", ""));
+        stations.add(new Station("Radio City", "http://google.com", ""));
+        stations.add(new Station("Radio City", "http://google.com", ""));
+        stations.add(new Station("Radio City", "http://google.com", ""));
         StationsAdapter stationsAdapter = new StationsAdapter(stations);
 
         stationsView.setLayoutManager(layout);
         stationsView.setAdapter(stationsAdapter);
+
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
     }
 
     @Override
@@ -56,5 +67,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (slidingUpPanelLayout != null &&
+                (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+                    || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        } else {
+            super.onBackPressed();
+        }
     }
 }
