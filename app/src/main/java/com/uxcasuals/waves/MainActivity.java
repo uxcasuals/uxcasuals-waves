@@ -1,51 +1,59 @@
 package com.uxcasuals.waves;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.squareup.otto.Subscribe;
 import com.uxcasuals.waves.adapters.StationsAdapter;
-import com.uxcasuals.waves.models.Station;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.uxcasuals.waves.asynctasks.StationsNetworkLoader;
+import com.uxcasuals.waves.events.DataAvailableEvent;
+import com.uxcasuals.waves.fragments.HomePageFragment;
+import com.uxcasuals.waves.fragments.InitialLoadingFragment;
+import com.uxcasuals.waves.utils.EventBus;
 
 public class MainActivity extends AppCompatActivity {
 
-    private SlidingUpPanelLayout slidingUpPanelLayout;
+    private static final String TAG = MainActivity.class.getName();
+
+    private Toolbar toolbar;
+    private StationsAdapter stationsAdapter;
+
+    public Toolbar getToolbar() {
+        return toolbar;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView stationsView = (RecyclerView)findViewById(R.id.stations_view);
-        RecyclerView.LayoutManager layout = new GridLayoutManager(this, 2);
 
-        List<Station> stations = new ArrayList<Station>();
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        stations.add(new Station("Radio City", "http://google.com", ""));
-        StationsAdapter stationsAdapter = new StationsAdapter(stations);
 
-        stationsView.setLayoutManager(layout);
-        stationsView.setAdapter(stationsAdapter);
+        getFragmentManager().beginTransaction()
+                .replace(R.id.placeholder_fragment, new InitialLoadingFragment())
+                .commit();
 
-        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.sliding_layout);
+        new StationsNetworkLoader().execute();
+        stationsAdapter = new StationsAdapter();
     }
+
+    @Subscribe
+    public void loadHomePageFragment(DataAvailableEvent dataAvailableEvent) {
+        HomePageFragment homePageFragment = new HomePageFragment();
+        homePageFragment.setStationsAdapter(stationsAdapter);
+        Log.v(TAG, "loadingHomeFragment");
+        getFragmentManager().beginTransaction()
+                .replace(R.id.placeholder_fragment, homePageFragment)
+                .commit();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,13 +78,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getInstance().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getInstance().unregister(this);
+        super.onStop();
+    }
+
+    @Override
     public void onBackPressed() {
-        if (slidingUpPanelLayout != null &&
-                (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
-                    || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
-            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        } else {
-            super.onBackPressed();
-        }
+//        if (slidingUpPanelLayout != null &&
+//                (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+//                    || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+//            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+//        } else {
+//            super.onBackPressed();
+//        }
     }
 }

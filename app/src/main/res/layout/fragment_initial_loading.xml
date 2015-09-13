@@ -1,18 +1,14 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context="com.uxcasuals.waves.fragments.InitialLoadingFragment">
 
-    <include layout="@layout/toolbar" />
-
-    <FrameLayout
+    <pl.droidsonroids.gif.GifImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/placeholder_fragment">
+        android:src="@drawable/ic_loading"
+        android:background="@drawable/ic_loading" />
 
-    </FrameLayout>
-
-</LinearLayout>
+</RelativeLayout>
