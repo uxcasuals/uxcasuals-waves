@@ -1,12 +1,13 @@
 package com.uxcasuals.waves.asynctasks;
 
 import android.os.AsyncTask;
-import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.uxcasuals.waves.events.DataAvailableEvent;
 import com.uxcasuals.waves.models.Station;
 import com.uxcasuals.waves.utils.EventBus;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -54,7 +55,7 @@ public class StationsNetworkLoader extends AsyncTask {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         List<Station> stations = (List<Station>) o;
-        Log.v(TAG, "Stations:" + stations);
+//        Log.v(TAG, "Stations:" + stations);
         EventBus.getInstance().post(new DataAvailableEvent(stations));
     }
 }

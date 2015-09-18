@@ -5,10 +5,10 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.uxcasuals.waves.MainActivity;
 import com.uxcasuals.waves.R;
@@ -34,9 +34,7 @@ public class HomePageFragment extends Fragment {
     private SlidingUpPanelLayout slidingUpPanelLayout;
 
     public HomePageFragment() {
-        // Required empty public constructor
-        Log.v(TAG, "HomePageFragment initialize()");
-//        stationsAdapter = new StationsAdapter();
+//        Log.v(TAG, "HomePageFragment initialize()");
     }
 
     @Override
@@ -63,41 +61,40 @@ public class HomePageFragment extends Fragment {
                 .commit();
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) view.findViewById(R.id.sliding_layout);
-        slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
-            @Override
-            public void onPanelSlide(View view, float v) {
-
-            }
-
-            @Override
-            public void onPanelCollapsed(View view) {
-                Log.v("TAG", "OnPanelCollapsed");
-                Log.v("TAG", "OnPanelExpanded");
-                PlayerCollapsedFragment playerCollapsedFragment = new PlayerCollapsedFragment();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.player_controls_holder, playerCollapsedFragment)
-                        .commit();
-            }
-
-            @Override
-            public void onPanelExpanded(View view) {
-                Log.v("TAG", "OnPanelExpanded");
-                PlayerExpandedFragment playerExpandedFragment = new PlayerExpandedFragment();
-                getFragmentManager().beginTransaction()
-                        .replace(R.id.player_controls_holder, playerExpandedFragment)
-                        .commit();
-            }
-
-            @Override
-            public void onPanelAnchored(View view) {
-                Log.v("TAG", "OnPanelAnchored");
-            }
-
-            @Override
-            public void onPanelHidden(View view) {
-                Log.v("TAG", "onPanelHidden");
-            }
-        });
+//        slidingUpPanelLayout.setPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+//            @Override
+//            public void onPanelSlide(View view, float v) {
+//
+//            }
+//
+//            @Override
+//            public void onPanelCollapsed(View view) {
+//                Log.v("TAG", "OnPanelCollapsed");
+//                PlayerCollapsedFragment playerCollapsedFragment = new PlayerCollapsedFragment();
+//                getFragmentManager().beginTransaction()
+//                        .replace(R.id.player_controls_holder, playerCollapsedFragment)
+//                        .commit();
+//            }
+//
+//            @Override
+//            public void onPanelExpanded(View view) {
+//                Log.v("TAG", "OnPanelExpanded");
+//                PlayerExpandedFragment playerExpandedFragment = new PlayerExpandedFragment();
+//                getFragmentManager().beginTransaction()
+//                        .replace(R.id.player_controls_holder, playerExpandedFragment)
+//                        .commit();
+//            }
+//
+//            @Override
+//            public void onPanelAnchored(View view) {
+//                Log.v("TAG", "OnPanelAnchored");
+//            }
+//
+//            @Override
+//            public void onPanelHidden(View view) {
+//                Log.v("TAG", "onPanelHidden");
+//            }
+//        });
         return view;
     }
 
@@ -105,12 +102,11 @@ public class HomePageFragment extends Fragment {
     public void onStart() {
         super.onStart();
         EventBus.getInstance().register(this);
-        Log.v(TAG, "HomePageFragment start()");
     }
 
     @Override
     public void onStop() {
+        EventBus.getInstance().unregister(this);
         super.onStop();
-        EventBus.getInstance().register(this);
     }
 }

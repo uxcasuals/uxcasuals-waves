@@ -2,17 +2,20 @@ package com.uxcasuals.waves.adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.squareup.otto.Subscribe;
 import com.uxcasuals.waves.R;
 import com.uxcasuals.waves.asynctasks.BitmapLoader;
 import com.uxcasuals.waves.events.DataAvailableEvent;
+import com.uxcasuals.waves.events.StationChangeEvent;
 import com.uxcasuals.waves.models.Station;
 import com.uxcasuals.waves.utils.EventBus;
+
 import java.util.List;
 
 /**
@@ -25,7 +28,6 @@ public class StationsAdapter extends RecyclerView.Adapter<StationsAdapter.ViewHo
     private List<Station> stations;
 
     public StationsAdapter() {
-        Log.v(TAG, "StationAdapter initialize()");
         EventBus.getInstance().register(this);
     }
 
@@ -54,10 +56,17 @@ public class StationsAdapter extends RecyclerView.Adapter<StationsAdapter.ViewHo
         TextView stationNameView = (TextView) stationView.findViewById(R.id.station_name);
         ImageView stationImageView = (ImageView) stationView.findViewById(R.id.station_logo);
 
-        Station station = stations.get(position);
+        final Station station = stations.get(position);
         stationNameView.setText(station.getName());
 //        stationImageView.setImageResource(R.drawable.ic_radiocity);
         new BitmapLoader(stationImageView, station.getLogo()).execute();
+
+        stationView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EventBus.getInstance().post(new StationChangeEvent(station));
+            }
+        });
     }
 
     @Override
@@ -80,6 +89,5 @@ public class StationsAdapter extends RecyclerView.Adapter<StationsAdapter.ViewHo
     @Subscribe
     public void notifyDataLoaded(DataAvailableEvent dataAvailableEvent) {
         stations = dataAvailableEvent.getStations();
-        Log.v(TAG, "notifyDataLoaded()");
     }
 }
