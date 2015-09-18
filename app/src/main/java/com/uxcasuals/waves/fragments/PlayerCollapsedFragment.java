@@ -15,6 +15,7 @@ import com.squareup.otto.Subscribe;
 import com.uxcasuals.waves.R;
 import com.uxcasuals.waves.events.PlayerControlsChangeEvent;
 import com.uxcasuals.waves.events.StationChangeEvent;
+import com.uxcasuals.waves.utils.AlbumArtCache;
 import com.uxcasuals.waves.utils.EventBus;
 
 /**
@@ -68,6 +69,8 @@ public class PlayerCollapsedFragment extends Fragment {
         String name = String.format(resources.getString(R.string.favourite_station_playing),
                 resources.getString(R.string.listening), stationChangeEvent.getStation().getName());
         stationName.setText(name);
+
+        AlbumArtCache.getInstance().fetchBitmap(stationChangeEvent.getStation().getLogo(), stationLogo);
     }
 
     @Override

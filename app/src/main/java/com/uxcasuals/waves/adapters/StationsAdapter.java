@@ -1,5 +1,6 @@
 package com.uxcasuals.waves.adapters;
 
+import android.app.AlarmManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import com.uxcasuals.waves.asynctasks.BitmapLoader;
 import com.uxcasuals.waves.events.DataAvailableEvent;
 import com.uxcasuals.waves.events.StationChangeEvent;
 import com.uxcasuals.waves.models.Station;
+import com.uxcasuals.waves.utils.AlbumArtCache;
 import com.uxcasuals.waves.utils.EventBus;
 
 import java.util.List;
@@ -59,7 +61,8 @@ public class StationsAdapter extends RecyclerView.Adapter<StationsAdapter.ViewHo
         final Station station = stations.get(position);
         stationNameView.setText(station.getName());
 //        stationImageView.setImageResource(R.drawable.ic_radiocity);
-        new BitmapLoader(stationImageView, station.getLogo()).execute();
+//        new BitmapLoader(stationImageView, station.getLogo()).execute();
+        AlbumArtCache.getInstance().fetchBitmap(station.getLogo(), stationImageView);
 
         stationView.setOnClickListener(new View.OnClickListener() {
             @Override

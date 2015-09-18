@@ -3,6 +3,7 @@ package com.uxcasuals.waves.asynctasks;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.LruCache;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -14,10 +15,14 @@ import java.net.URL;
  */
 public class BitmapLoader extends AsyncTask {
 
+    private LruCache<String, Bitmap> mCache;
     ImageView imageView;
     String SERVER_URL;
 
-    public BitmapLoader() {
+    public BitmapLoader(ImageView imageView, String SERVER_URL, LruCache<String, Bitmap> mCache) {
+        this.imageView = imageView;
+        this.SERVER_URL = SERVER_URL;
+        this.mCache = mCache;
     }
 
     public BitmapLoader(ImageView imageView, String SERVER_URL) {
@@ -37,6 +42,7 @@ public class BitmapLoader extends AsyncTask {
             if(response == HttpURLConnection.HTTP_OK) {
                 InputStream inputStream = httpURLConnection.getInputStream();
                 bitmap = BitmapFactory.decodeStream(inputStream);
+                mCache.put(SERVER_URL, bitmap);
             }
         } catch (Exception e) {
             e.printStackTrace();
